@@ -5,7 +5,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using System.Collections.Generic;
-using UnityEngine.VR.WSA;
+
 using System.Linq;
 
 namespace HoloToolkit.Unity
@@ -156,9 +156,9 @@ namespace HoloToolkit.Unity
         private void Start()
         {
             spatialUnderstanding = SpatialUnderstanding.Instance;
-            if (gameObject.GetComponent<WorldAnchor>() == null)
+            if (gameObject.GetComponent<UnityEngine.XR.WSA.WorldAnchor>() == null)
             {
-                gameObject.AddComponent<WorldAnchor>();
+                gameObject.AddComponent<UnityEngine.XR.WSA.WorldAnchor>();
             }
         }
 

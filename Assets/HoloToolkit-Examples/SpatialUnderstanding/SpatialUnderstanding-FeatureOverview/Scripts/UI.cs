@@ -6,7 +6,7 @@ using System.Collections;
 using HoloToolkit.Unity;
 using System;
 using UnityEngine.UI;
-using UnityEngine.VR.WSA.Input;
+
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
@@ -151,7 +151,7 @@ public class UI : LineDrawer
         Debug.Log("PlaceMenu - InFrontOfUser");
     }
 
-    private void OnAirTap(InteractionSourceState state)
+    private void OnAirTap(UnityEngine.XR.WSA.Input.InteractionSourceState state)
     {
         // Try to intersect one of the buttons
         Vector3 hitPos, hitNormal;

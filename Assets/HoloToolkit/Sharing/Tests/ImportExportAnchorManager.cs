@@ -6,9 +6,9 @@ using HoloToolkit.Unity;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VR.WSA;
-using UnityEngine.VR.WSA.Persistence;
-using UnityEngine.VR.WSA.Sharing;
+
+
+
 
 /// <summary>
 /// Manages creating anchors and sharing the anchors with other clients.
@@ -60,7 +60,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// <summary>
     /// WorldAnchorTransferBatch is the primary object in serializing/deserializing anchors.
     /// </summary>
-    private WorldAnchorTransferBatch sharedAnchorInterface;
+    private UnityEngine.XR.WSA.Sharing.WorldAnchorTransferBatch sharedAnchorInterface;
 
     /// <summary>
     /// Keeps track of stored anchor data blob.
@@ -70,7 +70,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// <summary>
     /// Keeps track of locally stored anchors.
     /// </summary>
-    private WorldAnchorStore anchorStore = null;
+    private UnityEngine.XR.WSA.Persistence.WorldAnchorStore anchorStore = null;
 
     /// <summary>
     /// Keeps track of the name of the anchor we are exporting.
@@ -122,7 +122,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
         Debug.Log("Import Export Manager starting");
         // We need to get our local anchor store started up.
         currentState = ImportExportState.AnchorStore_Initializing;
-        WorldAnchorStore.GetAsync(AnchorStoreReady);
+        UnityEngine.XR.WSA.Persistence.WorldAnchorStore.GetAsync(AnchorStoreReady);
     }
 
     private void Start()
@@ -210,7 +210,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// Called when the local anchor store is ready.
     /// </summary>
     /// <param name="store"></param>
-    private void AnchorStoreReady(WorldAnchorStore store)
+    private void AnchorStoreReady(UnityEngine.XR.WSA.Persistence.WorldAnchorStore store)
     {
         anchorStore = store;
         currentState = ImportExportState.AnchorStore_Initialized;
@@ -347,7 +347,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
             case ImportExportState.DataReady:
                 // DataReady is set when the anchor download completes.
                 currentState = ImportExportState.Importing;
-                WorldAnchorTransferBatch.ImportAsync(rawAnchorData, ImportComplete);
+                UnityEngine.XR.WSA.Sharing.WorldAnchorTransferBatch.ImportAsync(rawAnchorData, ImportComplete);
                 break;
             case ImportExportState.InitialAnchorRequired:
                 currentState = ImportExportState.CreatingInitialAnchor;
@@ -366,10 +366,10 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// </summary>
     private void CreateAnchorLocally()
     {
-        WorldAnchor anchor = GetComponent<WorldAnchor>();
+        UnityEngine.XR.WSA.WorldAnchor anchor = GetComponent<UnityEngine.XR.WSA.WorldAnchor>();
         if (anchor == null)
         {
-            anchor = gameObject.AddComponent<WorldAnchor>();
+            anchor = gameObject.AddComponent<UnityEngine.XR.WSA.WorldAnchor>();
         }
 
         if (anchor.isLocated)
@@ -385,7 +385,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// <summary>
     /// Callback to trigger when an anchor has been 'found'.
     /// </summary>
-    private void Anchor_OnTrackingChanged_InitialAnchor(WorldAnchor self, bool located)
+    private void Anchor_OnTrackingChanged_InitialAnchor(UnityEngine.XR.WSA.WorldAnchor self, bool located)
     {
         if (located)
         {
@@ -414,7 +414,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
             if (ids[index] == anchorName)
             {
                 Debug.Log("Using what we have");
-                WorldAnchor wa = anchorStore.Load(ids[index], gameObject);
+                UnityEngine.XR.WSA.WorldAnchor wa = anchorStore.Load(ids[index], gameObject);
                 if (wa.isLocated)
                 {
                     currentState = ImportExportState.Ready;
@@ -436,7 +436,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// </summary>
     /// <param name="self"></param>
     /// <param name="located"></param>
-    private void ImportExportAnchorManager_OnTrackingChanged_Attaching(WorldAnchor self, bool located)
+    private void ImportExportAnchorManager_OnTrackingChanged_Attaching(UnityEngine.XR.WSA.WorldAnchor self, bool located)
     {
         Debug.Log("anchor " + located);
         if (located)
@@ -457,16 +457,16 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// </summary>
     /// <param name="status"></param>
     /// <param name="wat"></param>
-    private void ImportComplete(SerializationCompletionReason status, WorldAnchorTransferBatch wat)
+    private void ImportComplete(UnityEngine.XR.WSA.Sharing.SerializationCompletionReason status, UnityEngine.XR.WSA.Sharing.WorldAnchorTransferBatch wat)
     {
-        if (status == SerializationCompletionReason.Succeeded && wat.GetAllIds().Length > 0)
+        if (status == UnityEngine.XR.WSA.Sharing.SerializationCompletionReason.Succeeded && wat.GetAllIds().Length > 0)
         {
             Debug.Log("Import complete");
 
             string first = wat.GetAllIds()[0];
             Debug.Log("Anchor name: " + first);
 
-            WorldAnchor anchor = wat.LockObject(first, gameObject);
+            UnityEngine.XR.WSA.WorldAnchor anchor = wat.LockObject(first, gameObject);
             anchorStore.Save(first, anchor);
             currentState = ImportExportState.Ready;
         }
@@ -482,7 +482,7 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// </summary>
     private void Export()
     {
-        WorldAnchor anchor = GetComponent<WorldAnchor>();
+        UnityEngine.XR.WSA.WorldAnchor anchor = GetComponent<UnityEngine.XR.WSA.WorldAnchor>();
 
         if (anchor == null)
         {
@@ -496,9 +496,9 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
         // Save the anchor to our local anchor store.
         if (anchorStore.Save(exportingAnchorName, anchor))
         {
-            sharedAnchorInterface = new WorldAnchorTransferBatch();
+            sharedAnchorInterface = new UnityEngine.XR.WSA.Sharing.WorldAnchorTransferBatch();
             sharedAnchorInterface.AddWorldAnchor(guidString, anchor);
-            WorldAnchorTransferBatch.ExportAsync(sharedAnchorInterface, WriteBuffer, ExportComplete);
+            UnityEngine.XR.WSA.Sharing.WorldAnchorTransferBatch.ExportAsync(sharedAnchorInterface, WriteBuffer, ExportComplete);
         }
         else
         {
@@ -520,9 +520,9 @@ public class ImportExportAnchorManager : Singleton<ImportExportAnchorManager>
     /// Called by the WorldAnchorTransferBatch when anchor exporting is complete.
     /// </summary>
     /// <param name="status"></param>
-    public void ExportComplete(SerializationCompletionReason status)
+    public void ExportComplete(UnityEngine.XR.WSA.Sharing.SerializationCompletionReason status)
     {
-        if (status == SerializationCompletionReason.Succeeded && exportingAnchorBytes.Count > minTrustworthySerializedAnchorDataSize)
+        if (status == UnityEngine.XR.WSA.Sharing.SerializationCompletionReason.Succeeded && exportingAnchorBytes.Count > minTrustworthySerializedAnchorDataSize)
         {
             Debug.Log("Uploading anchor: " + exportingAnchorName);
             roomManager.UploadAnchor(

@@ -2,7 +2,7 @@
 // Licensed under the MIT License. See LICENSE in the project root for license information.
 
 using UnityEngine;
-using UnityEngine.VR.WSA.Input;
+
 
 namespace HoloToolkit.Unity.InputModule
 {
@@ -15,8 +15,8 @@ namespace HoloToolkit.Unity.InputModule
         [Tooltip("Set to true to use the use rails (guides) for the navigation gesture, as opposed to full 3D navigation.")]
         public bool UseRailsNavigation = false;
 
-        private GestureRecognizer gestureRecognizer;
-        private GestureRecognizer navigationGestureRecognizer;
+        private UnityEngine.XR.WSA.Input.GestureRecognizer gestureRecognizer;
+        private UnityEngine.XR.WSA.Input.GestureRecognizer navigationGestureRecognizer;
 
         public override SupportedInputEvents SupportedEvents
         {
@@ -31,7 +31,7 @@ namespace HoloToolkit.Unity.InputModule
 
         private void Awake()
         {
-            gestureRecognizer = new GestureRecognizer();
+            gestureRecognizer = new UnityEngine.XR.WSA.Input.GestureRecognizer();
             gestureRecognizer.TappedEvent += OnTappedEvent;
             
             gestureRecognizer.HoldStartedEvent += OnHoldStartedEvent;
@@ -43,13 +43,13 @@ namespace HoloToolkit.Unity.InputModule
             gestureRecognizer.ManipulationCompletedEvent += OnManipulationCompletedEvent;
             gestureRecognizer.ManipulationCanceledEvent += OnManipulationCanceledEvent;
 
-            gestureRecognizer.SetRecognizableGestures(GestureSettings.Tap | 
-                                                      GestureSettings.ManipulationTranslate |
-                                                      GestureSettings.Hold);
+            gestureRecognizer.SetRecognizableGestures(UnityEngine.XR.WSA.Input.GestureSettings.Tap | 
+                                                      UnityEngine.XR.WSA.Input.GestureSettings.ManipulationTranslate |
+                                                      UnityEngine.XR.WSA.Input.GestureSettings.Hold);
             gestureRecognizer.StartCapturingGestures();
 
             // We need a separate gesture recognizer for navigation, since it isn't compatible with manipulation
-            navigationGestureRecognizer = new GestureRecognizer();
+            navigationGestureRecognizer = new UnityEngine.XR.WSA.Input.GestureRecognizer();
 
             navigationGestureRecognizer.NavigationStartedEvent += OnNavigationStartedEvent;
             navigationGestureRecognizer.NavigationUpdatedEvent += OnNavigationUpdatedEvent;
@@ -58,15 +58,15 @@ namespace HoloToolkit.Unity.InputModule
 
             if (UseRailsNavigation)
             {
-                navigationGestureRecognizer.SetRecognizableGestures(GestureSettings.NavigationRailsX |
-                                                                    GestureSettings.NavigationRailsY |
-                                                                    GestureSettings.NavigationRailsZ);
+                navigationGestureRecognizer.SetRecognizableGestures(UnityEngine.XR.WSA.Input.GestureSettings.NavigationRailsX |
+                                                                    UnityEngine.XR.WSA.Input.GestureSettings.NavigationRailsY |
+                                                                    UnityEngine.XR.WSA.Input.GestureSettings.NavigationRailsZ);
             }
             else
             {
-                navigationGestureRecognizer.SetRecognizableGestures(GestureSettings.NavigationX |
-                                                                    GestureSettings.NavigationY |
-                                                                    GestureSettings.NavigationZ);
+                navigationGestureRecognizer.SetRecognizableGestures(UnityEngine.XR.WSA.Input.GestureSettings.NavigationX |
+                                                                    UnityEngine.XR.WSA.Input.GestureSettings.NavigationY |
+                                                                    UnityEngine.XR.WSA.Input.GestureSettings.NavigationZ);
             }
             navigationGestureRecognizer.StartCapturingGestures();
         }
@@ -93,73 +93,73 @@ namespace HoloToolkit.Unity.InputModule
             base.OnDestroy();
         }
 
-        private void OnTappedEvent(InteractionSourceKind source, int tapCount, Ray headRay)
+        private void OnTappedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, int tapCount, Ray headRay)
         {
             SourceClickEventArgs args = new SourceClickEventArgs(this, 0, tapCount);
             RaiseSourceClickedEvent(args);
         }
 
-        private void OnHoldStartedEvent(InteractionSourceKind source, Ray headray)
+        private void OnHoldStartedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Ray headray)
         {
             HoldEventArgs args = new HoldEventArgs(this, 0);
             RaiseHoldStartedEvent(args);
         }
 
-        private void OnHoldCanceledEvent(InteractionSourceKind source, Ray headray)
+        private void OnHoldCanceledEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Ray headray)
         {
             HoldEventArgs args = new HoldEventArgs(this, 0);
             RaiseHoldCanceledEvent(args);
         }
 
-        private void OnHoldCompletedEvent(InteractionSourceKind source, Ray headray)
+        private void OnHoldCompletedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Ray headray)
         {
             HoldEventArgs args = new HoldEventArgs(this, 0);
             RaiseHoldCompletedEvent(args);
         }
 
-        private void OnManipulationStartedEvent(InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
+        private void OnManipulationStartedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
         {
             ManipulationEventArgs args = new ManipulationEventArgs(this, 0, cumulativeDelta);
             RaiseManipulationStartedEvent(args);
         }
 
-        private void OnManipulationUpdatedEvent(InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
+        private void OnManipulationUpdatedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
         {
             ManipulationEventArgs args = new ManipulationEventArgs(this, 0, cumulativeDelta);
             RaiseManipulationUpdatedEvent(args);
         }
 
-        private void OnManipulationCompletedEvent(InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
+        private void OnManipulationCompletedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
         {
             ManipulationEventArgs args = new ManipulationEventArgs(this, 0, cumulativeDelta);
             RaiseManipulationCompletedEvent(args);
         }
 
-        private void OnManipulationCanceledEvent(InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
+        private void OnManipulationCanceledEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 cumulativeDelta, Ray headray)
         {
             ManipulationEventArgs args = new ManipulationEventArgs(this, 0, cumulativeDelta);
             RaiseManipulationCanceledEvent(args);
         }
 
-        private void OnNavigationStartedEvent(InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
+        private void OnNavigationStartedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
         {
             NavigationEventArgs args = new NavigationEventArgs(this, 0, normalizedOffset);
             RaiseNavigationStartedEvent(args);
         }
 
-        private void OnNavigationUpdatedEvent(InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
+        private void OnNavigationUpdatedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
         {
             NavigationEventArgs args = new NavigationEventArgs(this, 0, normalizedOffset);
             RaiseNavigationUpdatedEvent(args);
         }
 
-        private void OnNavigationCompletedEvent(InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
+        private void OnNavigationCompletedEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
         {
             NavigationEventArgs args = new NavigationEventArgs(this, 0, normalizedOffset);
             RaiseNavigationCompletedEvent(args);
         }
 
-        private void OnNavigationCanceledEvent(InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
+        private void OnNavigationCanceledEvent(UnityEngine.XR.WSA.Input.InteractionSourceKind source, Vector3 normalizedOffset, Ray headray)
         {
             NavigationEventArgs args = new NavigationEventArgs(this, 0, normalizedOffset);
             RaiseNavigationCanceledEvent(args);

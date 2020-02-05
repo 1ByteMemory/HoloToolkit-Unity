@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.VR.WSA.Input;
+
 
 namespace HoloToolkit.Unity.InputModule
 {
@@ -122,12 +122,12 @@ namespace HoloToolkit.Unity.InputModule
         private void UpdateSourceData()
         {
             // Poll for updated reading from hands
-            InteractionSourceState[] sourceStates = InteractionManager.GetCurrentReading();
+            UnityEngine.XR.WSA.Input.InteractionSourceState[] sourceStates = InteractionManager.GetCurrentReading();
             if (sourceStates != null)
             {
                 for (var i = 0; i < sourceStates.Length; ++i)
                 {
-                    InteractionSourceState handSource = sourceStates[i];
+                    UnityEngine.XR.WSA.Input.InteractionSourceState handSource = sourceStates[i];
                     SourceData sourceData = GetOrAddSourceData(handSource.source);
                     currentSources.Add(handSource.source.id);
 
@@ -141,7 +141,7 @@ namespace HoloToolkit.Unity.InputModule
         /// </summary>
         /// <param name="interactionSource">Interaction source for which data should be retrieved.</param>
         /// <returns>The source data requested.</returns>
-        private SourceData GetOrAddSourceData(InteractionSource interactionSource)
+        private SourceData GetOrAddSourceData(UnityEngine.XR.WSA.Input.InteractionSource interactionSource)
         {
             SourceData sourceData;
             if (!sourceIdToData.TryGetValue(interactionSource.id, out sourceData))
@@ -159,7 +159,7 @@ namespace HoloToolkit.Unity.InputModule
         /// </summary>
         /// <param name="interactionSource">Interaction source to use to update the position.</param>
         /// <param name="sourceData">SourceData structure to update.</param>
-        private void UpdateSourceState(InteractionSourceState interactionSource, SourceData sourceData)
+        private void UpdateSourceState(UnityEngine.XR.WSA.Input.InteractionSourceState interactionSource, SourceData sourceData)
         {
             // Update source position
             Vector3 sourcePosition;
@@ -170,9 +170,9 @@ namespace HoloToolkit.Unity.InputModule
             }
 
             // Check for source presses
-            if (interactionSource.pressed != sourceData.IsSourceDownPending)
+            if (interactionSource.selectPressed != sourceData.IsSourceDownPending)
             {
-                sourceData.IsSourceDownPending = interactionSource.pressed;
+                sourceData.IsSourceDownPending = interactionSource.selectPressed;
                 sourceData.SourceStateUpdateTimer = SourcePressDelay;
             }
 

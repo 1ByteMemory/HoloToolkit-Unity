@@ -188,7 +188,7 @@ namespace HoloToolkit.Unity
         {
 #if UNITY_EDITOR
             // Allow observering if a device is present (Holographic Remoting)
-            if(!UnityEngine.VR.VRDevice.isPresent) return;
+            if(!UnityEngine.XR.XRDevice.isPresent) return;
 #endif
             if (!IsObserverRunning())
             {
@@ -204,7 +204,7 @@ namespace HoloToolkit.Unity
         {
 #if UNITY_EDITOR
             // Allow observering if a device is present (Holographic Remoting)
-            if(!UnityEngine.VR.VRDevice.isPresent) return;
+            if(!UnityEngine.XR.XRDevice.isPresent) return;
 #endif
             if (IsObserverRunning())
             {
