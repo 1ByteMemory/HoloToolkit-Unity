@@ -4,6 +4,7 @@
 using UnityEngine;
 using System.Collections;
 using HoloToolkit.Unity;
+using UnityEngine.XR.WSA.Input;
 using System;
 using UnityEngine.UI;
 
@@ -58,7 +59,7 @@ public class UI : LineDrawer
 
         // Events
         SpatialUnderstanding.Instance.ScanStateChanged += OnScanStateChanged;
-        InteractionManager.SourcePressed += OnAirTap;
+        InteractionManager.InteractionSourcePressedLegacy += OnAirTap;
     }
 
     protected override void OnDestroy()
@@ -67,7 +68,7 @@ public class UI : LineDrawer
         {
             SpatialUnderstanding.Instance.ScanStateChanged -= OnScanStateChanged;
         }
-        InteractionManager.SourcePressed -= OnAirTap;
+        InteractionManager.InteractionSourcePressedLegacy -= OnAirTap;
 
         base.OnDestroy();
     }
