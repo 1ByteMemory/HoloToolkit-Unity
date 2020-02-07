@@ -54,9 +54,9 @@ namespace HoloToolkit.Unity.InputModule
 
             // Register for hand and finger events to know where your hand
             // is being tracked and what state it is in.
-            InteractionManager.SourceLost += InteractionManager_SourceLost;
-            InteractionManager.SourceUpdated += InteractionManager_SourceUpdated;
-            InteractionManager.SourceReleased += InteractionManager_SourceReleased;
+            InteractionManager.InteractionSourceLostLegacy += InteractionManager_SourceLost;
+            InteractionManager.InteractionSourceUpdatedLegacy += InteractionManager_SourceUpdated;
+            InteractionManager.InteractionSourceReleasedLegacy += InteractionManager_SourceReleased;
         }
 
         private void ShowHandGuidanceIndicator(UnityEngine.XR.WSA.Input.InteractionSourceState hand)
@@ -159,9 +159,9 @@ namespace HoloToolkit.Unity.InputModule
 
         protected override void OnDestroy()
         {
-            InteractionManager.SourceLost -= InteractionManager_SourceLost;
-            InteractionManager.SourceUpdated -= InteractionManager_SourceUpdated;
-            InteractionManager.SourceReleased -= InteractionManager_SourceReleased;
+            InteractionManager.InteractionSourceLostLegacy -= InteractionManager_SourceLost;
+            InteractionManager.InteractionSourceUpdatedLegacy -= InteractionManager_SourceUpdated;
+            InteractionManager.InteractionSourceReleasedLegacy -= InteractionManager_SourceReleased;
 
             base.OnDestroy();
         }
